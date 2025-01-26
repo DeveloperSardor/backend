@@ -7,7 +7,7 @@ export class LeadershipContr{
     static async Get(req, res){
         try {
             const { id } = req.params;
-            if(id){
+    if(id){
                 res.send({
                     status : 200,
                     message : `Leadership`,
@@ -34,6 +34,7 @@ export class LeadershipContr{
         try {
             const { name_en, name_ru, name_uz, role, img } = req.body;
             const newLeadership = await LeadershipSchema.create({ name_en, name_ru, name_uz, role, img })
+            console.log(newLeadership)
             res.send({
                 status : 201,
                 message : `Successfuly added`,
@@ -55,6 +56,9 @@ export class LeadershipContr{
             if(!findLeadershipById){
                 throw new Error(`Not found leadership`)
             }
+            const { name_en, name_ru, name_uz, img, role } = req.body;
+            console.log(req.body);
+            
             const updatedLeadership = await LeadershipSchema.findByIdAndUpdate(id, { name_en, name_ru, name_uz, role, img }, {new : true})
             res.send({
                 status : 200,

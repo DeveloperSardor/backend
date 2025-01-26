@@ -33,6 +33,8 @@ export class DepartmentContr {
   static async Post(req, res) {
     try {
       const { title_en, title_ru, title_uz, img } = req.body;
+      console.log(req.body);
+      
       const addedDepartment = await DepartmentSchema.create({
         title_en,
         title_ru,

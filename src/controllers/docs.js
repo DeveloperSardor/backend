@@ -20,7 +20,7 @@ export class DocsContr{
                     status : 200,
                     message : `Docs`,
                     success : true,
-                    data : await DocsSchema.find()
+                    data : await DocsSchema.find().sort({ createdAt : -1 })
                 })
             }
         } catch (error) {
@@ -53,6 +53,8 @@ export class DocsContr{
 
     static async Put(req, res){
         try {
+            console.log('salom');
+            
             const { id } = req.params;
             const findDocsById = await DocsSchema.findById(id);
             if(!findDocsById){
@@ -60,6 +62,12 @@ export class DocsContr{
             }
             const { title_en, title_ru, title_uz, text_en, text_ru, text_uz, link } = req.body;
             const updatedDocs = await DocsSchema.findByIdAndUpdate(id, { title_en, title_ru, title_uz, text_en, text_ru, text_uz, link  }, { new : true })
+            res.send({
+                status : 200,
+                message : "Successfuly updated",
+                success : true,
+                data : updatedDocs
+            })
         } catch (error) {
             res.send({
                 status : 400,

@@ -19,7 +19,7 @@ export class ArticlesContr {
           status: 200,
           message: "Articles",
           success: true,
-          data: await ArticlesSchema.find(),
+          data: await ArticlesSchema.find().sort({ createdAt : -1 }),
         });
       }
     } catch (error) {
@@ -35,7 +35,11 @@ export class ArticlesContr {
     try {
       const { title_en, title_ru, title_uz, desc_en, desc_ru, desc_uz, img } =
         req.body;
-      const newArticles = await ArticlesSchema.create(
+        console.log(req.body);
+        
+     
+
+      const newArticles = await ArticlesSchema.create({
         title_en,
         title_ru,
         title_uz,
@@ -43,7 +47,10 @@ export class ArticlesContr {
         desc_ru,
         desc_uz,
         img
-      );
+      });
+      
+      console.log(newArticles);
+      
       res.send({
         status: 201,
         message: "Successfuly added",

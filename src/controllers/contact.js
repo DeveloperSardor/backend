@@ -9,7 +9,7 @@ export class ContactContr {
         status: 200,
         message: "Contact Messages",
         success: true,
-        data: await ContactSchema.find(),
+        data: await ContactSchema.find().sort({ createdAt : -1 }),
       });
     } catch (error) {
       res.send({

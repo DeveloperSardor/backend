@@ -1,32 +1,32 @@
-import CharterSchema from "../schemas/charter.js";
+import LocalSchema from "../schemas/local-list.js";
 
-export class CharterContr {
+export class LocalContr {
   constructor() {}
 
   static async Get(req, res) {
     try {
       const { id } = req.params;
       if (id) {
-        const charterById = await CharterSchema.findById(id);
-        if (!charterById) {
+        const localById = await LocalSchema.findById(id);
+        if (!localById) {
           return res.status(404).send({
             status: 404,
-            message: "Charter not found",
+            message: "Local list not found",
             success: false,
           });
         }
         return res.send({
           status: 200,
-          message: "Charter by Id",
+          message: "Local list by Id",
           success: true,
-          data: charterById,
+          data: localById,
         });
       } else {
         return res.send({
           status: 200,
-          message: "Charters",
+          message: "Local lists",
           success: true,
-          data: await CharterSchema.find(),
+          data: await LocalSchema.find(),
         });
       }
     } catch (error) {
@@ -41,7 +41,7 @@ export class CharterContr {
   static async Post(req, res) {
     try {
       const { title_en, title_ru, title_uz, link } = req.body;
-      const newCharter = await CharterSchema.create({
+      const newLocal = await LocalSchema.create({
         title_en,
         title_ru,
         title_uz,
@@ -51,7 +51,7 @@ export class CharterContr {
         status: 201,
         message: "Successfully added",
         success: true,
-        data: newCharter,
+        data: newLocal,
       });
     } catch (error) {
       res.status(400).send({
@@ -66,15 +66,15 @@ export class CharterContr {
     try {
       const { id } = req.params;
       const { title_en, title_ru, title_uz, link } = req.body;
-      const findCharterById = await CharterSchema.findById(id);
-      if (!findCharterById) {
+      const findListById = await LocalSchema.findById(id);
+      if (!findListById) {
         return res.status(404).send({
           status: 404,
-          message: "Not found charter",
+          message: "Not found local list",
           success: false,
         });
       }
-      const updated = await CharterSchema.findByIdAndUpdate(
+      const updated = await LocalSchema.findByIdAndUpdate(
         id,
         { title_en, title_ru, title_uz, link },
         { new: true }
@@ -97,20 +97,20 @@ export class CharterContr {
   static async Delete(req, res) {
     try {
       const { id } = req.params;
-      const findCharterById = await CharterSchema.findById(id);
-      if (!findCharterById) {
+      const findListById = await LocalSchema.findById(id);
+      if (!findListById) {
         return res.status(404).send({
           status: 404,
-          message: "Not found charter",
+          message: "Not found local list",
           success: false,
         });
       }
-      const deletedCharter = await CharterSchema.findByIdAndDelete(id);
+      const deletedLocal = await LocalSchema.findByIdAndDelete(id);
       res.send({
         status: 200,
         message: "Successfully deleted",
         success: true,
-        data: deletedCharter,
+        data: deletedLocal,
       });
     } catch (error) {
       res.status(400).send({

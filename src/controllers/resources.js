@@ -31,60 +31,70 @@ export class ResourceContr {
   }
   static async Post(req, res) {
     try {
-      const {
-        title_en,
-        title_ru,
-        title_uz,
-        text_en,
-        text_ru,
-        text_uz,
-        youtube_link,
-        files,
-      } = req.body;
-      const newResource = await ResourcesSchema.create({
-        title_en,
-        title_ru,
-        title_uz,
-        text_en,
-        text_ru,
-        text_uz,
-        youtube_link,
-        files,
-      });
-      res.send({
-        status: 201,
-        message: "Successfuly added",
-        success: true,
-        data: newResource,
-      });
+        const {
+            title_en,
+            title_ru,
+            title_uz,
+            text_en,
+            text_ru,
+            text_uz,
+            youtube_link,
+            files,
+        } = req.body;
+
+        // Tekshiruv: faqat bittasi yuborilgan bo'lishi kerak
+        if (!youtube_link && !files) {
+            return res.send({
+                status: 400,
+                message: "You must provide either a youtube_link or files.",
+                success: false,
+            });
+        }
+
+        if (youtube_link && files) {
+            return res.send({
+                status: 400,
+                message: "Please provide either youtube_link or files, not both.",
+                success: false,
+            });
+        }
+
+        // Ma'lumotni bazaga qo'shish
+        const newResource = await ResourcesSchema.create({
+            title_en,
+            title_ru,
+            title_uz,
+            text_en,
+            text_ru,
+            text_uz,
+            youtube_link,
+            files,
+        });
+
+        res.send({
+            status: 201,
+            message: "Successfully added",
+            success: true,
+            data: newResource,
+        });
     } catch (error) {
-      res.send({
-        status: 400,
-        message: error.message,
-        success: false,
-      });
+        res.send({
+            status: 400,
+            message: error.message,
+            success: false,
+        });
     }
-  }
-  static async Put(req, res) {
-    try {
+}
+
+static async Put(req, res) {
+  try {
       const { id } = req.params;
       const findResourceById = await ResourcesSchema.findById(id);
       if (!findResourceById) {
-        throw new Error(`Not found resource`);
+          throw new Error('Not found resource');
       }
+
       const {
-        title_en,
-        title_ru,
-        title_uz,
-        text_en,
-        text_ru,
-        text_uz,
-        youtube_link,
-        files,
-      } = req.body;
-      const updateResource = await ResourcesSchema.findByIdAndUpdate(
-        id,
-        {
           title_en,
           title_ru,
           title_uz,
@@ -93,23 +103,56 @@ export class ResourceContr {
           text_uz,
           youtube_link,
           files,
-        },
-        { new: true }
+      } = req.body;
+
+      // Tekshiruv: faqat bittasi yuborilgan bo'lishi kerak
+      if (!youtube_link && !files) {
+          return res.send({
+              status: 400,
+              message: "You must provide either a youtube_link or files.",
+              success: false,
+          });
+      }
+
+      if (youtube_link && files) {
+          return res.send({
+              status: 400,
+              message: "Please provide either youtube_link or files, not both.",
+              success: false,
+          });
+      }
+
+      // Ma'lumotni yangilash
+      const updateResource = await ResourcesSchema.findByIdAndUpdate(
+          id,
+          {
+              title_en,
+              title_ru,
+              title_uz,
+              text_en,
+              text_ru,
+              text_uz,
+              youtube_link,
+              files,
+          },
+          { new: true } // Yangilangan ma'lumotni qaytaradi
       );
+
       res.send({
-        status : 200,
-        message : "Successfuly updated",
-        success : true,
-        data : updateResource
-      })
-    } catch (error) {
-      res.send({
-        status: 400,
-        message: error.message,
-        success: false,
+          status: 200,
+          message: "Successfully updated",
+          success: true,
+          data: updateResource,
       });
-    }
+  } catch (error) {
+      res.send({
+          status: 400,
+          message: error.message,
+          success: false,
+      });
   }
+}
+
   static async Delete(req, res) {
     try {
         const { id } = req.params;

@@ -16,7 +16,9 @@ import ResourcesRouter from "./resources.js";
 import RolesRouter from "./roles.js";
 import StructureRouter from "./strcuture.js";
 import VacancyAppealRouter from "./vacancy-appeal.js";
-
+import UneskoRouter from "./unesko.js";
+import LocalListRouter from "./local-list.js";
+import AdminRouter from "./admin.js";
 
 
 const ApiRouter = Router();
@@ -34,12 +36,15 @@ ApiRouter.use('/info', InfoRouter)
 ApiRouter.use('/job-vacancies', JobVacanciesRouter)
 ApiRouter.use('/leadership', LeadershipRouter)
 ApiRouter.use('/national-list', NationalListRouter)
+ApiRouter.use('/unesko', UneskoRouter)
+ApiRouter.use('/local-list', LocalListRouter)
 ApiRouter.use('/news', NewsRouter)
 ApiRouter.use('/partners', PartnersRouter)
 ApiRouter.use('/resources', ResourcesRouter)
 ApiRouter.use('/roles', RolesRouter)
 ApiRouter.use('/structure', StructureRouter)
-ApiRouter.use('/vacancy-appeal', VacancyAppealRouter)
+ApiRouter.use('/vacancy-applications', VacancyAppealRouter)
+ApiRouter.use('/admin', AdminRouter)
 
 
 

@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { NationalListContr } from "../controllers/national-list.js";
-
+import {  NationalListContr } from '../controllers/national-list.js'
 
 const NationalListRouter = Router();
 
