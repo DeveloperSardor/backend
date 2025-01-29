@@ -6,24 +6,25 @@ export class ArticlesContr {
   static async Get(req, res) {
     try {
       const { id } = req.params;
-      const findArticlesById = await ArticlesSchema.findById(id);
       if (id) {
+        const findArticle = await ArticlesSchema.findById(id);
         res.send({
           status: 200,
-          message: "Articles by Id",
+          message: "Article by Id",
           success: true,
-          data: findArticlesById,
+          data: findArticle,
         });
       } else {
+        const articles = await ArticlesSchema.find().sort({ createdAt: -1 });
         res.send({
           status: 200,
-          message: "Articles",
+          message: "All Articles",
           success: true,
-          data: await ArticlesSchema.find().sort({ createdAt : -1 }),
+          data: articles,
         });
       }
     } catch (error) {
-      res.send({
+      res.status(400).send({
         status: 400,
         message: error.message,
         success: false,
@@ -33,32 +34,27 @@ export class ArticlesContr {
 
   static async Post(req, res) {
     try {
-      const { title_en, title_ru, title_uz, desc_en, desc_ru, desc_uz, img } =
-        req.body;
-        console.log(req.body);
-        
-     
-
-      const newArticles = await ArticlesSchema.create({
+      const { title_en, title_ru, title_uz, desc_en, desc_ru, desc_uz, pdf_file } = req.body;
+      console.log(pdf_file);
+      
+      const newArticle = await ArticlesSchema.create({
         title_en,
         title_ru,
         title_uz,
         desc_en,
         desc_ru,
         desc_uz,
-        img
+        pdf_file,
       });
-      
-      console.log(newArticles);
-      
-      res.send({
+
+      res.status(201).send({
         status: 201,
-        message: "Successfuly added",
+        message: "Successfully added",
         success: true,
-        data: newArticles,
+        data: newArticle,
       });
     } catch (error) {
-      res.send({
+      res.status(400).send({
         status: 400,
         message: error.message,
         success: false,
@@ -69,25 +65,24 @@ export class ArticlesContr {
   static async Put(req, res) {
     try {
       const { id } = req.params;
-      const articlesById = await ArticlesSchema.findById(id);
-      if (!articlesById) {
-        throw new Error(`Not found articles`);
-      }
-      const { title_en, title_ru, title_uz, desc_en, desc_ru, desc_uz, img } =
-        req.body;
-      const updatedArticles = await ArticlesSchema.findByIdAndUpdate(
+      const existingArticle = await ArticlesSchema.findById(id);
+      if (!existingArticle) throw new Error(`Article not found`);
+
+      const { title_en, title_ru, title_uz, desc_en, desc_ru, desc_uz, pdf_file } = req.body;
+      const updatedArticle = await ArticlesSchema.findByIdAndUpdate(
         id,
-        { title_en, title_ru, title_uz, desc_en, desc_ru, desc_uz, img },
+        { title_en, title_ru, title_uz, desc_en, desc_ru, desc_uz, pdf_file },
         { new: true }
       );
+
       res.send({
         status: 200,
-        message: "Successfuly updated",
+        message: "Successfully updated",
         success: true,
-        data: updatedArticles,
+        data: updatedArticle,
       });
     } catch (error) {
-      res.send({
+      res.status(400).send({
         status: 400,
         message: error.message,
         success: false,
@@ -98,19 +93,18 @@ export class ArticlesContr {
   static async Delete(req, res) {
     try {
       const { id } = req.params;
-      const articlesById = await ArticlesSchema.findById(id);
-      if (!articlesById) {
-        throw new Error(`Not found articles`);
-      }
-      const deleteArticle = await ArticlesSchema.findByIdAndDelete(id);
+      const existingArticle = await ArticlesSchema.findById(id);
+      if (!existingArticle) throw new Error(`Article not found`);
+
+      const deletedArticle = await ArticlesSchema.findByIdAndDelete(id);
       res.send({
         status: 200,
-        message: `Successfuly deleted`,
+        message: "Successfully deleted",
         success: true,
-        data: deleteArticle,
+        data: deletedArticle,
       });
     } catch (error) {
-      res.send({
+      res.status(400).send({
         status: 400,
         message: error.message,
         success: false,
